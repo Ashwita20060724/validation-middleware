@@ -6,6 +6,7 @@ import { handleFilesUpload } from '../middlewares/FileUploadMiddleware.js'
 import { handleValidation } from '../middlewares/ValidationHandlingMiddleware.js'
 import { checkRestaurantOwnership } from '../middlewares/RestaurantMiddleware.js'
 import { checkEntityExists } from '../middlewares/EntityMiddleware.js'
+import * as RestaurantValidation from '../controllers/validation/RestaurantValidation.js'
 
 const loadFileRoutes = function (app) {
   app.route('/restaurants')
@@ -15,6 +16,7 @@ const loadFileRoutes = function (app) {
       isLoggedIn,
       hasRole('owner'),
       handleFilesUpload(['logo', 'heroImage'], process.env.RESTAURANTS_FOLDER), // se pone el campo del modelado
+      RestaurantValidation.create,
       handleValidation,
       RestaurantController.create)
 
@@ -26,6 +28,7 @@ const loadFileRoutes = function (app) {
       isLoggedIn,
       hasRole('owner'),
       handleFilesUpload(['logo', 'heroImage'], process.env.RESTAURANTS_FOLDER),
+      RestaurantValidation.update,
       handleValidation,
       checkRestaurantOwnership,
       checkEntityExists('Restaurant', 'restaurantId'),
@@ -35,6 +38,7 @@ const loadFileRoutes = function (app) {
       hasRole('owner'),
       checkRestaurantOwnership,
       checkEntityExists('Restaurant', 'restaurantId'),
+      RestaurantValidation.delete,
       handleValidation,
       RestaurantController.destroy)
 
